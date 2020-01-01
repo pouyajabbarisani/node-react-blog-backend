@@ -7,6 +7,8 @@ const mongoose = require('mongoose');
 const path = require('path');
 const graphqlHTTP = require('express-graphql');
 const schema = require('./schema/schema.js');
+const cookieParser = require('cookie-parser');
+const authCheck = require('./middleware/auth-check');
 
 // Defining the default port
 const port = process.env.PORT || 1111;
@@ -24,6 +26,11 @@ app.use("/public", express.static(path.join(__dirname, "public")));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+// Use a random key in cookie parser for signing the cookie
+app.use(cookieParser(process.env.TOKEN_SECRET));
+
+// check is user authenticated or not then we can access to auth data in request in GraphQL 
+app.use(authCheck);
 
 // GraphQL endpoint
 app.use('/graphql', graphqlHTTP({
