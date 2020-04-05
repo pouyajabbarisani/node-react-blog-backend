@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 
 const authCheck = (req, res, next) => {
-   if (!req.signedCookies.token || req.signedCookies.token == '') {
+   if (!req.signedCookies || !req.signedCookies.token || req.signedCookies.token == '') {
       req.isAuth = false;
       return next();
    }
