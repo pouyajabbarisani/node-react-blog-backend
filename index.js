@@ -1,41 +1,21 @@
-const express = require('express');
+import express from 'express';
 const app = express();
-const server = require('http').createServer(app);
-const bodyParser = require('body-parser');
-const cors = require('cors');
-const mongoose = require('mongoose');
-const path = require('path');
-const graphqlHTTP = require('express-graphql');
-const schema = require('./schema/schema.js');
-const cookieParser = require('cookie-parser');
-const authCheck = require('./middleware/auth-check');
-
-// Defining the default port
-const port = process.env.PORT || 1111;
+import { ApolloServer } from 'apollo-server-express';
+import mongoose from 'mongoose';
+import { PORT } from './config';
 
 // Connect to DB
-const db = require('./config').mongoURI
-mongoose.Promise = global.Promise;
-mongoose.connect(db, { useNewUrlParser: true })
-   .then(() => console.log('🍃 Database Successfully connected!'))
-   .catch(err => console.log(err));
+import { mongoURI } from './config'
+mongoose.connect(mongoURI, { useNewUrlParser: true }).then(() => console.log('🍃 Database Successfully connected!')).catch(err => console.log(err));
 
-// Express app configs
-app.use(cors());
-app.use("/public", express.static(path.join(__dirname, "public")));
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+import typeDefs from './typeDefs'
+import resolvers from './resolvers'
 
-// Use a random key in cookie parser for signing the cookie
-app.use(cookieParser(process.env.TOKEN_SECRET));
+const server = new ApolloServer({
+   typeDefs,
+   resolvers,
+   playgorund: process.env.NODE_ENV !== 'production'
+});
 
-// check is user authenticated or not then we can access to auth data in request in GraphQL 
-app.use(authCheck);
-
-// GraphQL endpoint
-app.use('/graphql', graphqlHTTP({
-   schema,
-   graphiql: true
-}));
-
-server.listen(port, () => console.log(`⚙️✅ Server is running on port ${port}`));
+server.applyMiddleware({ app });
+app.listen({ port: PORT }, () => console.log(`⚙️✅ Server is running on http://localhost:${PORT}${server.graphqlPath}`));
