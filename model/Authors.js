@@ -5,9 +5,8 @@ const connection = mongoose.createConnection(connectionURL);
 
 autoIncrement.initialize(connection);
 
-const AdminsSchema = mongoose.Schema({
-   name: { type: String, require: true },
-   family: { type: String, require: true },
+const AuthorsSchema = mongoose.Schema({
+   fullName: { type: String, require: true },
    email: { type: String, require: true, unique: true },
    password: { type: String, require: true },
    username: { type: String, require: true, unique: true },
@@ -15,7 +14,7 @@ const AdminsSchema = mongoose.Schema({
    created_at: Date,
 });
 
-AdminsSchema.pre('save', function (next) {
+AuthorsSchema.pre('save', function (next) {
    var currentDate = new Date();
    this.updated_at = currentDate;
    if (!this.created_at) {
@@ -24,13 +23,7 @@ AdminsSchema.pre('save', function (next) {
    next();
 });
 
-AdminsSchema.plugin(autoIncrement.plugin, {
-   model: 'Admins',
-   field: 'adminID',
-   startAt: 100,
-   incrementBy: 1
-});
 
-var Admins = mongoose.model('Admins', AdminsSchema);
+var Authors = mongoose.model('Authors', AuthorsSchema);
 
-module.exports = Admins;
+module.exports = Authors;
