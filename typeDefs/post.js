@@ -6,7 +6,7 @@ export default gql`
       posts: [Post]!
    }
    extend type Mutation {
-      createPost(slug: String, title: String!, content: String!, featuredImage: String, categories: [String]!): Post
+      createPost(slug: String, title: String!, content: String!, featuredImage: String, categories: [String]!): Post @auth(role: "manager")
    }
    type Post {
       postID: ID!
@@ -16,5 +16,6 @@ export default gql`
       featuredImage: String
       thumnail: String
       categories: [String]!
+      author: Author!
    }   
 `

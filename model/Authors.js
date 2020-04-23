@@ -10,6 +10,7 @@ const AuthorsSchema = mongoose.Schema({
    email: { type: String, require: true, unique: true },
    password: { type: String, require: true },
    username: { type: String, require: true, unique: true },
+   isManager: { type: Boolean, require: true, default: false },
    updated_at: Date,
    created_at: Date,
 });

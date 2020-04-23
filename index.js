@@ -3,6 +3,7 @@ const app = express();
 import { ApolloServer } from 'apollo-server-express';
 import mongoose from 'mongoose';
 import { PORT } from './config';
+import SchemaDirectives from './directives';
 
 // Connect to DB
 import { mongoURI } from './config'
@@ -14,6 +15,7 @@ import resolvers from './resolvers'
 const server = new ApolloServer({
    typeDefs,
    resolvers,
+   SchemaDirectives,
    playgorund: process.env.NODE_ENV !== 'production'
 });
 

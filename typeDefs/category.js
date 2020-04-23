@@ -6,11 +6,12 @@ export default gql`
       categories: [Category]!
    }
    extend type Mutation {
-      createCategory(slug: String, title: String!): Category
+      createCategory(slug: String, title: String!): Category @auth(role: "manager")
    }
    type Category {
       categoryID: ID!
       slug: String!
       title: String!
+      posts: [Post]!
    }   
 `
