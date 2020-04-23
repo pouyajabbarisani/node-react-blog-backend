@@ -1,5 +1,6 @@
 import Authors from '../model/Authors';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 export default {
    Query: {
@@ -50,6 +51,34 @@ export default {
             isManager: true
          });
          return manager.save();
+      },
+      login: async (root, args, context, info) => {
+         // TODO: add field verification
+         const author = await Authors.findOne({ email: args.email });
+         if (!author) {
+            throw new Error('Author with entered email not found!');
+         }
+         const hashCompare = await bcrypt.compare(args.password, author.password);
+         if (hashCompare) {
+            // user matched   
+            const payload = { username: author.username, isManager: author.isManager } // create jwt payload
+            // sign token
+            const token = await jwt.sign(payload, process.env.PASS_SECRET, { expiresIn: 60 * 60 * 24 * 3 /* 3 days */ });
+            if (!token) {
+               throw new Error('Unexpected error!');
+            }
+            context.res.cookie('token', token, {
+               httpOnly: true,
+               maxAge: 1000 * 60 * 60 * 24 * 3,
+            })
+            return author;
+         } else {
+            throw new Error('Wrong password!');
+         }
+      },
+      logout(parent, args, context, info) {
+         context.res.clearCookie('token');
+         return { message: "logged out successfully!" }
       }
    }
 }

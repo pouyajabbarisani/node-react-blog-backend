@@ -2,3 +2,5 @@
 /config.js
 config.js
 config
+.env
+/.env
