@@ -11,7 +11,7 @@ export const authCheck = (req, role) => {
    }
    let decodedCookie;
    try {
-      decodedCookie = jwt.verify(token, process.env.AUTH_SECRET);
+      decodedCookie = jwt.verify(token, process.env.PASS_SECRET);
    }
    catch (err) {
       throw new AuthenticationError('You must be signed in.');
@@ -22,5 +22,6 @@ export const authCheck = (req, role) => {
    if (role == 'manager' && !decodedCookie.isManager) {
       throw new AuthenticationError('You must be Manager to able do this action!');
    }
+   req.author = decodedCookie.username;
    return true;
 };

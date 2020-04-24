@@ -12,7 +12,19 @@ export default {
    },
    Mutation: {
       createPost: (root, args, context, info) => {
-
+         // TODO: field verification
+         const authorUsername = context.req.author;
+         if (!authorUsername) {
+            throw new Error('Login again!');
+         }
+         const newPost = new Posts({
+            author: authorUsername,
+            slug: args.slug.toString(),
+            title: args.title.toString(),
+            content: args.content,
+            categories: args.categories
+         })
+         return newPost.save();
       }
    },
    Post: {

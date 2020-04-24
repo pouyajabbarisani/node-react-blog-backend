@@ -1,12 +1,12 @@
 import express from 'express';
 const app = express();
 import cookieParser from 'cookie-parser';
-app.use(cookieParser());
+require('dotenv').config({ path: __dirname + '/.env' });
+app.use(cookieParser(process.env.COOKIE_SIGN));
 import { ApolloServer } from 'apollo-server-express';
 import mongoose from 'mongoose';
 import { PORT } from './config';
-import SchemaDirectives from './directives';
-require('dotenv').config({ path: __dirname + '/.env' });
+import schemaDirectives from './directives';
 
 // Connect to DB
 import { mongoURI } from './config'
@@ -18,7 +18,7 @@ import resolvers from './resolvers'
 const server = new ApolloServer({
    typeDefs,
    resolvers,
-   SchemaDirectives,
+   schemaDirectives,
    playgorund: process.env.NODE_ENV !== 'production',
    context: ({ req, res }) => ({ req, res })
 });

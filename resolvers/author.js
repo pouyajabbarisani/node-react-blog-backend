@@ -5,10 +5,17 @@ import jwt from 'jsonwebtoken';
 export default {
    Query: {
       author: (root, args, context, info) => {
-
+         return Authors.findOne({ username: args.username.toString() });
       },
       authors: (root, args, context, info) => {
-
+         return Authors.aggregate([{
+            $project: {
+               fullName: 1,
+               username: 1,
+               isManager: 1,
+               email: 1
+            }
+         }])
       }
    },
    Mutation: {
@@ -67,9 +74,10 @@ export default {
             if (!token) {
                throw new Error('Unexpected error!');
             }
-            context.res.cookie('token', token, {
+            context.res.cookie('token', 'Bearer ' + token, {
                httpOnly: true,
                maxAge: 1000 * 60 * 60 * 24 * 3,
+               signed: true
             })
             return author;
          } else {

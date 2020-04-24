@@ -2,7 +2,7 @@ import { gql } from 'apollo-server-express'
 
 export default gql`
    extend type Query {
-      author(id: String!): Author
+      author(username: String!): Author
       authors: [Author]!
    }
    extend type Mutation {
@@ -13,7 +13,7 @@ export default gql`
    }
    type Author {
       fullName: String!
-      email: String!
+      email: String! @auth(role: "manager")
       username: String!
       isManager: Boolean!
       posts: [Post]!
