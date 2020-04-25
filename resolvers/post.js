@@ -22,9 +22,30 @@ export default {
             slug: args.slug.toString(),
             title: args.title.toString(),
             content: args.content,
-            categories: args.categories
+            categories: args.categories,
+            featuredImage: args.featuredImage || null
          })
          return newPost.save();
+      },
+      editPost: async (root, args, context, info) => {
+         // TODO: add field verification
+         const matchedPostArray = await Posts.find({ slug: args.slug.toString() });
+         if (matchedPostArray.length) {
+            let updatedPost = {}
+            args.updatedSlug && (updatedPost.slug = args.updatedSlug);
+            args.updatedTitle && (updatedPost.title = args.updatedTitle);
+            args.updatedContent && (updatedPost.content = args.updatedContent);
+            args.updatedCategories && (updatedPost.categories = args.updatedCategories);
+            args.updatedFeaturedImage && (updatedPost.featuredImage = args.updatedFeaturedImage);
+
+            return Posts.findOneAndUpdate(
+               { slug: args.slug.toString() },
+               updatedPost,
+               { new: true });
+         }
+         else {
+            throw new Error('Entered post not found!')
+         }
       }
    },
    Post: {

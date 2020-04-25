@@ -11,6 +11,7 @@ const PostsSchema = mongoose.Schema({
    title: { type: String, require: true },
    content: { type: String, require: false },
    categories: { type: Array, require: false },
+   featuredImage: { type: String },
    updated_at: Date,
    created_at: Date
 });
