@@ -2,6 +2,7 @@ import Authors from '../model/Authors';
 import Posts from '../model/Posts';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import passwordHasher from '../scripts/password-hasher';
 
 export default {
    Query: {
@@ -20,8 +21,17 @@ export default {
       }
    },
    Mutation: {
-      createAuthor: (root, args, context, info) => {
-
+      createAuthor: async (root, args, context, info) => {
+         // TODO: add field verification
+         var unhashedPass = args.password;
+         hashedPassword = await passwordHasher(unhashedPass);
+         const newAuthor = new Authors({
+            fullName: args.fullName,
+            email: args.email,
+            password: hashedPassword,
+            username: args.username,
+         })
+         return newAuthor.save();
       },
       initialManager: async (root, args, context, info) => {
          const existAuthor = await Authors.find();
@@ -30,27 +40,7 @@ export default {
          }
          // TODO: add field verification
          var unhashedPass = args.password;
-         var hashedPassword;
-         var saltResult = new Promise((resolve, reject) => {
-            bcrypt.genSalt(10, function (err, salt) {
-               if (err) reject(err)
-               resolve(salt)
-            });
-         })
-         var hasherFunction = (enterySaltResult, pass) => {
-            return new Promise((resolve, reject) => {
-               bcrypt.hash(pass, enterySaltResult, function (err, hash) {
-                  if (err) reject(err)
-                  resolve(hash)
-               });
-            })
-         }
-         await saltResult.then(async (generatedSalt) => {
-            return await hasherFunction(generatedSalt, unhashedPass)
-               .then((hashedPass) => {
-                  hashedPassword = hashedPass
-               })
-         });
+         hashedPassword = await passwordHasher(unhashedPass);
          const manager = new Authors({
             fullName: args.fullName.toString(),
             email: args.email.toString(),
