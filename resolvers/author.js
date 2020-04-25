@@ -1,4 +1,5 @@
 import Authors from '../model/Authors';
+import Posts from '../model/Posts';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
@@ -87,6 +88,11 @@ export default {
       logout(parent, args, context, info) {
          context.res.clearCookie('token');
          return { message: "logged out successfully!" }
+      }
+   },
+   Author: {
+      posts: (author, args, context, info) => {
+         return Posts.find({ author: author.username })
       }
    }
 }

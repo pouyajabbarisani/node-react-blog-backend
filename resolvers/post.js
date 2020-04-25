@@ -28,20 +28,16 @@ export default {
       }
    },
    Post: {
-      author: async (post, args, { req }, info) => {
-         await Authors.aggregate([
-            {
-               $match: {
-                  username: post.author
-               }
-            },
-            {
-               $project: {
-                  fullName: 1,
-                  username: 1
-               }
-            }
-         ])[0];
+      author: (post, args, context, info) => {
+         return Authors.findOne({ username: post.author })
+      },
+      categoriesList: async (post, args, context, info) => {
+         let catArray = [];
+         for (let singleCatSlug of post.categories) {
+            var foundCat = await Categories.findOne({ slug: singleCatSlug })
+            catArray.push(foundCat);
+         }
+         return catArray;
       }
    }
 }

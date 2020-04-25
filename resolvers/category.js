@@ -1,4 +1,5 @@
 import Categories from '../model/Categories';
+import Posts from '../model/Posts';
 
 export default {
    Query: {
@@ -17,6 +18,11 @@ export default {
             slug: args.slug
          });
          return newCategory.save();
+      }
+   },
+   Category: {
+      posts: (category, args, context, info) => {
+         return Posts.find({ category: category.slug });
       }
    }
 }
