@@ -1,5 +1,7 @@
 import Categories from '../model/Categories';
 import Posts from '../model/Posts';
+import Joi from '@hapi/joi';
+import { createCategoryValidator, editCategoryValidator } from '../validation/category';
 
 export default {
    Query: {
@@ -11,8 +13,13 @@ export default {
       }
    },
    Mutation: {
-      createCategory: (root, args, context, info) => {
-         // TODO: add field verification
+      createCategory: async (root, args, context, info) => {
+         // validating input fields using Joi
+         const { error, validateResult: value } = await createCategoryValidator.validate(args, { abortEarly: false });
+         if (error) {
+            throw new Error(error);
+         }
+         // create new category object and save in the database
          const newCategory = new Categories({
             title: args.title,
             slug: args.slug
@@ -20,9 +27,15 @@ export default {
          return newCategory.save();
       },
       editCategory: async (root, args, context, info) => {
-         // TODO: add field verification
+         // validating input fields using Joi
+         const { error, validateResult: value } = await editCategoryValidator.validate(args, { abortEarly: false });
+         if (error) {
+            throw new Error(error);
+         }
+         // check database for requested category
          const matchedCategoryArray = await Categories.find({ slug: args.slug.toString() });
          if (matchedCategoryArray.length) {
+            // create new object with updated field and save in database
             let updatedCategory = {}
             args.updatedSlug && (updatedCategory.slug = args.updatedSlug);
             args.updatedTitle && (updatedCategory.title = args.updatedTitle);

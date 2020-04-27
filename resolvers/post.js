@@ -1,5 +1,7 @@
 import Authors from '../model/Authors';
 import Posts from '../model/Posts';
+import Joi from '@hapi/joi';
+import { createPostValidator, editPostValidator } from '../validation/post';
 
 export default {
    Query: {
@@ -11,12 +13,17 @@ export default {
       }
    },
    Mutation: {
-      createPost: (root, args, context, info) => {
-         // TODO: field verification
+      createPost: async (root, args, context, info) => {
+         // validating input fields using Joi
+         const { error, validateResult: value } = await createPostValidator.validate(args, { abortEarly: false });
+         if (error) {
+            throw new Error(error);
+         }
          const authorUsername = context.req.author;
          if (!authorUsername) {
             throw new Error('Login again!');
          }
+         // create new post and save in the database
          const newPost = new Posts({
             author: authorUsername,
             slug: args.slug.toString(),
@@ -28,16 +35,22 @@ export default {
          return newPost.save();
       },
       editPost: async (root, args, context, info) => {
-         // TODO: add field verification
+         // validating input fields using Joi
+         const { error, validateResult: value } = await editPostValidator.validate(args, { abortEarly: false });
+         if (error) {
+            throw new Error(error);
+         }
+         // check it enterd post exist in database or not
          const matchedPostArray = await Posts.find({ slug: args.slug.toString() });
          if (matchedPostArray.length) {
+            // create new object with updated fields
             let updatedPost = {}
             args.updatedSlug && (updatedPost.slug = args.updatedSlug);
             args.updatedTitle && (updatedPost.title = args.updatedTitle);
             args.updatedContent && (updatedPost.content = args.updatedContent);
             args.updatedCategories && (updatedPost.categories = args.updatedCategories);
             args.updatedFeaturedImage && (updatedPost.featuredImage = args.updatedFeaturedImage);
-
+            // update edited fields of the post in database
             return Posts.findOneAndUpdate(
                { slug: args.slug.toString() },
                updatedPost,
