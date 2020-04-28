@@ -4,7 +4,8 @@
   "description": "NodeJs/ExpressJs based blog back-end boilerplate",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "start": "nodemon",
+    "test": "ENV_TYPE=test jest"
   },
   "repository": {
     "type": "git",
