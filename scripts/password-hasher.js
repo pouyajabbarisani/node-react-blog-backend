@@ -1,36 +1,29 @@
+import bcrypt from 'bcrypt';
+
 export default async (password) => {
-   var unhashedPass = password;
-   var hashedPassword;
-   var saltResult = new Promise((resolve, reject) => {
+
+   return new Promise(function (resolve, reject) {
       bcrypt.genSalt(10, function (err, salt) {
          if (err) reject(err)
          resolve(salt)
       });
-   })
-   var hasherFunction = (enterySaltResult, pass) => {
+   }).then(function (enterySaltResult) {
       return new Promise((resolve, reject) => {
-         bcrypt.hash(pass, enterySaltResult, function (err, hash) {
+         bcrypt.hash(password, enterySaltResult, function (err, hash) {
             if (err) reject(err)
             resolve(hash)
          });
       })
-   }
-   await saltResult.then(async (generatedSalt) => {
-      return await hasherFunction(generatedSalt, unhashedPass)
-         .then((hashedPass) => {
-            hashedPassword = hashedPass
-         }).catch((err) => {
-            return {
-               status: false,
-            }
-         })
+   }).then(function (hash) { // (***)
+      return {
+         status: true,
+         password: hash
+      }
    }).catch((err) => {
       return {
          status: false,
+         password: null
       }
    });
-   return {
-      status: true,
-      hashedPassword
-   }
+
 }

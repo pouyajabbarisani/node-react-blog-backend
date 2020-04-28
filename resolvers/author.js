@@ -31,7 +31,7 @@ export default {
          }
          // get unhashed entered password and hash it
          var unhashedPass = args.password;
-         hashedPassword = await passwordHasher(unhashedPass);
+         const hashedPassword = await passwordHasher(unhashedPass).password;
          // create new author and save it in database
          const newAuthor = new Authors({
             fullName: args.fullName,
@@ -53,7 +53,7 @@ export default {
          }
          // get unhashed entered password and hash it
          var unhashedPass = args.password;
-         hashedPassword = await passwordHasher(unhashedPass);
+         const hashedPassword = await passwordHasher(unhashedPass).password;
          // create new author and save it in database
          const manager = new Authors({
             fullName: args.fullName.toString(),
