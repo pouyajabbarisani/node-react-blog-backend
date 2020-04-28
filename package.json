@@ -4,8 +4,8 @@
   "description": "NodeJs/ExpressJs based blog back-end boilerplate",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon",
-    "test": "ENV_TYPE=test jest"
+    "start": "ENV_TYPE=test nodemon",
+    "test": "jest --setupFiles dotenv/config --runInBand"
   },
   "repository": {
     "type": "git",
@@ -32,9 +32,12 @@
     "graphql-tools": "^5.0.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.8.2",
-    "mongoose-auto-increment": "^5.0.1"
+    "mongoose-auto-increment": "^5.0.1",
+    "supertest": "^4.0.2"
   },
   "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "babel-jest": "^25.4.0",
     "jest": "^25.2.7"
   }
 }
