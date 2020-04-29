@@ -31,12 +31,12 @@ export default {
          }
          // get unhashed entered password and hash it
          var unhashedPass = args.password;
-         const hashedPassword = await passwordHasher(unhashedPass).password;
+         const hashedPassword = await passwordHasher(unhashedPass);
          // create new author and save it in database
          const newAuthor = new Authors({
             fullName: args.fullName,
             email: args.email,
-            password: hashedPassword,
+            password: hashedPassword.password,
             username: args.username,
          })
          return newAuthor.save();
@@ -53,12 +53,12 @@ export default {
          }
          // get unhashed entered password and hash it
          var unhashedPass = args.password;
-         const hashedPassword = await passwordHasher(unhashedPass).password;
+         const hashedPassword = await passwordHasher(unhashedPass);
          // create new author and save it in database
          const manager = new Authors({
             fullName: args.fullName.toString(),
             email: args.email.toString(),
-            password: hashedPassword,
+            password: hashedPassword.password,
             username: args.username.toString(),
             isManager: true
          });
