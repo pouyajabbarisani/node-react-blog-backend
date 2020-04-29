@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const connectionURL = require('../config').mongoURI;
+const connectionURL = process.env.ENV_TYPE == 'test' ? process.env.mongoURI_TEST : process.env.mongoURI;
 var autoIncrement = require('mongoose-auto-increment');
 const connection = mongoose.createConnection(connectionURL);
 

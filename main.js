@@ -6,8 +6,8 @@ require('dotenv').config({ path: __dirname + '/.env' });
 app.use(cookieParser(process.env.COOKIE_SIGN));
 import { ApolloServer } from 'apollo-server-express';
 import mongoose from 'mongoose';
-import { PORT } from './config';
 import schemaDirectives from './directives';
+const PORT = process.env.PORT || 1111;
 
 // Connect to DB
 import config from './config';

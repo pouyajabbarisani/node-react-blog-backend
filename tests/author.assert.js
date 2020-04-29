@@ -1,4 +1,3 @@
-import config from '../config';
 import mongoose from 'mongoose';
 import request from 'supertest';
 import Authors from '../model/Authors';
@@ -8,7 +7,7 @@ const url = `http://localhost:${process.env.PORT}`;
 describe("Author tests", () => {
 
    beforeAll(async () => {
-      await mongoose.connect(config.mongoURI_TEST, { useNewUrlParser: true })
+      await mongoose.connect(process.env.mongoURI_TEST, { useNewUrlParser: true })
          .then(async () => { await Authors.deleteMany() })
          .catch(err => { throw new Error(err) });
    });
