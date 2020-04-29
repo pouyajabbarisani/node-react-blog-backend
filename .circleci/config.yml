@@ -11,9 +11,9 @@ jobs:
           steps:
             - run: npm install
             - run:
-              name: initial run
-              command: npm run start-server-for-test
-              background: true
+                name: initial run
+                command: npm run start-server-for-test
+                background: true
   run-test:
     executor:
       name: node/default
@@ -22,10 +22,12 @@ jobs:
       - node/with-cache:
           steps:
             - run: npm run ci-test
+
 workflows:
     build-and-run:
       jobs:
         - build-and-run
+
     run-test:
       jobs:
         - run-test
