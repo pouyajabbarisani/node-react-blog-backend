@@ -10,8 +10,7 @@ import schemaDirectives from './directives';
 const PORT = process.env.PORT || 1111;
 
 // Connect to DB
-import config from './config';
-mongoose.connect(process.env.ENV_TYPE == 'test' ? config.mongoURI_TEST : config.mongoURI, { useNewUrlParser: true }).then(() => console.log(`🍃${process.env.ENV_TYPE == 'test' ? 'Test' : ''} Database Successfully connected!`)).catch(err => console.log(err));
+mongoose.connect(process.env.ENV_TYPE && process.env.ENV_TYPE == 'test' ? process.env.mongoURI_TEST : process.env.mongoURI, { useNewUrlParser: true }).then(() => console.log(`🍃${process.env.ENV_TYPE == 'test' ? 'Test' : ''} Database Successfully connected!`)).catch(err => console.log(err));
 
 
 import typeDefs from './typeDefs'
