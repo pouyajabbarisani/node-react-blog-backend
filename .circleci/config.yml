@@ -10,7 +10,7 @@ jobs:
       - node/with-cache:
           steps:
             - run: npm install
-            - run: npm run start-server-for-test
+            - run: npm run start-server-for-test & sleep5
   run-test:
     executor:
       name: node/default
@@ -22,5 +22,5 @@ jobs:
 workflows:
     build-and-test:
       jobs:
-        - build-and-test
+        - build-and-run
         - run-test
