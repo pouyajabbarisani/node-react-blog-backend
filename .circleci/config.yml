@@ -10,11 +10,8 @@ jobs:
       - node/with-cache:
           steps:
             - run: npm install
-            - run:
-                name: initial run
-                command: npm run start-server-for-test
-                background: true
-            - run: sleep 10 && npm run ci-test
+            - run: npm run start-server-for-test && sleep 10
+            - run: npm run ci-test
 
 workflows:
     build-and-run:
