@@ -4,7 +4,7 @@
   "description": "NodeJs/ExpressJs based blog back-end boilerplate",
   "main": "index.js",
   "scripts": {
-    "start-server-for-test": "ENV_TYPE=test node",
+    "start-server-for-test": "node",
     "ci-test": "jest --runInBand",
     "test": "jest --setupFiles dotenv/config --runInBand"
   },
