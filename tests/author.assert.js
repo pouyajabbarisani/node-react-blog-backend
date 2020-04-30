@@ -12,8 +12,9 @@ describe("Author tests", () => {
          .catch(err => { throw new Error(err) });
    });
 
-   afterAll(async () => {
+   afterAll(async (done) => {
       await Authors.deleteMany();
+      done();
    });
 
    test("Shoud create first author as manager if not exist", (done) => {
