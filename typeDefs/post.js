@@ -8,6 +8,7 @@ export default gql`
    extend type Mutation {
       createPost(slug: String!, title: String!, content: String!, featuredImage: String, categories: [String]!): Post @auth(role: "author")
       editPost(slug: String!, updatedSlug: String, updatedTitle: String, updatedContent: String, updatedFeaturedImage: String, updatedCategories: [String]): Post @auth(role: "author")
+      deletePost(slug: String!): PostDeleteResult
    }
    type Post {
       postID: ID!
@@ -19,5 +20,9 @@ export default gql`
       categories: [String]!
       categoriesList: [Category]!
       author: Author!
+   }
+   type PostDeleteResult {
+      status: Boolean!
+      error: String
    }
 `
