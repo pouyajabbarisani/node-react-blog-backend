@@ -106,7 +106,6 @@ describe("Post tests", () => {
       request(url).post('/graphql').set('Content-Type', 'application/json').set('Accept', 'application/json')
          .set('Cookie', cookie).send({ query: 'mutation {deletePost(slug: "hello-better-world") { status }}' })
          .then(res => {
-            console.log(res.body);
             expect(res.body).toHaveProperty('data');
             expect(res.body.data).toHaveProperty('deletePost');
             expect(res.body.data.deletePost).toHaveProperty('status');
