@@ -5,8 +5,8 @@ import { createPostValidator, editPostValidator } from '../validation/post';
 
 export default {
    Query: {
-      post: (root, args, context, info) => {
-         return Posts.find({ slug: args.slug.toString() }).exec();
+      post: async (root, args, context, info) => {
+         return Posts.findOne({ slug: args.slug.toString() }).exec();
       },
       posts: (root, args, context, info) => {
          return Posts.find().exec();
