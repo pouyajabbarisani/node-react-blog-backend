@@ -9,3 +9,6 @@ export const editCategoryValidator = Joi.object({
    updatedTitle: Joi.string().label('Edited title'),
    updatedSlug: Joi.string().label('Edited slug')
 });
+export const deleteCategoryValidator = Joi.object({
+   slug: Joi.string().required().label('Slug')
+})

@@ -100,4 +100,16 @@ describe("Post tests", () => {
          });
    });
 
+   test("Should able to delete category as author", (done) => {
+      request(url).post('/graphql').set('Content-Type', 'application/json').set('Accept', 'application/json')
+         .set('Cookie', cookie).send({ query: 'mutation {deleteCategory(slug: "js") { status }}' })
+         .then(res => {
+            expect(res.body).toHaveProperty('data');
+            expect(res.body.data).toHaveProperty('deleteCategory');
+            expect(res.body.data.deleteCategory).toHaveProperty('status');
+            expect(res.body.data.deleteCategory.status).toEqual(true);
+            done();
+         });
+   });
+
 });

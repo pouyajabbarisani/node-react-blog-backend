@@ -1,7 +1,6 @@
 import Categories from '../model/Categories';
 import Posts from '../model/Posts';
-import Joi from '@hapi/joi';
-import { createCategoryValidator, editCategoryValidator } from '../validation/category';
+import { createCategoryValidator, editCategoryValidator, deleteCategoryValidator } from '../validation/category';
 
 export default {
    Query: {
@@ -46,6 +45,33 @@ export default {
          }
          else {
             throw new Error('Entered category not found!')
+         }
+      },
+      deleteCategory: async (root, args, context, info) => {
+         // validate input fields using joi
+         const { error, validationResult: value } = await deleteCategoryValidator.validate(args, { abortEarly: false });
+         if (error) {
+            throw new Error(error);
+         }
+         // check if post exist in database or not
+         const matchedCategoryArray = await Categories.find({ slug: args.slug.toString() });
+         if (matchedCategoryArray.length) {
+            const deleteResult = await Categories.remove({ slug: args.slug.toString() })
+            if (!deleteResult.ok) {
+               return {
+                  status: false,
+                  error: 'Error in database!'
+               }
+            }
+            return {
+               status: true
+            }
+         }
+         else {
+            return {
+               status: false,
+               error: 'Entered category not found!'
+            }
          }
       }
    },

@@ -8,11 +8,16 @@ export default gql`
    extend type Mutation {
       createCategory(slug: String!, title: String!): Category @auth(role: "author")
       editCategory(slug: String!, updatedTitle: String, updatedSlug: String): Category @auth(role: "author")
+      deleteCategory(slug: String!): CategoryDeleteResult
    }
    type Category {
       categoryID: ID!
       slug: String!
       title: String!
       posts: [Post]!
-   }   
+   }
+   type CategoryDeleteResult {
+      status: Boolean!
+      error: String
+   }
 `
