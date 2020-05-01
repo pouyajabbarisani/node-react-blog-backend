@@ -102,4 +102,17 @@ describe("Post tests", () => {
          });
    });
 
+   test("Should able to delete post as author", (done) => {
+      request(url).post('/graphql').set('Content-Type', 'application/json').set('Accept', 'application/json')
+         .set('Cookie', cookie).send({ query: 'mutation {deletePost(slug: "hello-better-world") { status }}' })
+         .then(res => {
+            console.log(res.body);
+            expect(res.body).toHaveProperty('data');
+            expect(res.body.data).toHaveProperty('deletePost');
+            expect(res.body.data.deletePost).toHaveProperty('status');
+            expect(res.body.data.deletePost.status).toEqual(true);
+            done();
+         });
+   });
+
 });

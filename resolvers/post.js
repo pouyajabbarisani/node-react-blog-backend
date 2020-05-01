@@ -1,7 +1,7 @@
 import Authors from '../model/Authors';
 import Posts from '../model/Posts';
 import Joi from '@hapi/joi';
-import { createPostValidator, editPostValidator } from '../validation/post';
+import { createPostValidator, editPostValidator, deletePostValidator } from '../validation/post';
 
 export default {
    Query: {
@@ -58,6 +58,33 @@ export default {
          }
          else {
             throw new Error('Entered post not found!')
+         }
+      },
+      deletePost: async (root, args, context, info) => {
+         // validate input fields using joi
+         const { error, validationResult: value } = await deletePostValidator.validate(args, { abortEarly: false });
+         if (error) {
+            throw new Error(error);
+         }
+         // check if post exist in database or not
+         const matchedPostArray = await Posts.find({ slug: args.slug.toString() });
+         if (matchedPostArray.length) {
+            const deleteResult = await Posts.remove({ slug: args.slug.toString() })
+            if (!deleteResult.ok) {
+               return {
+                  status: false,
+                  error: 'Error in database!'
+               }
+            }
+            return {
+               status: true
+            }
+         }
+         else {
+            return {
+               status: false,
+               error: 'Entered post not found!'
+            }
          }
       }
    },

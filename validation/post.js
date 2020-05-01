@@ -15,3 +15,6 @@ export const editPostValidator = Joi.object({
    updatedCategories: Joi.array().items(Joi.string()).label('Edited categories'),
    updatedFeaturedImage: Joi.string().label('Edited featured image')
 });
+export const deletePostValidator = Joi.object({
+   slug: Joi.string().required().label('Slug')
+});
