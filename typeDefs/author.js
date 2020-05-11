@@ -4,6 +4,7 @@ export default gql`
    extend type Query {
       author(username: String!): Author
       authors: [Author]!
+      checkAuth: Author @auth
    }
    extend type Mutation {
       createAuthor(fullName: String!, email: String!, password: String!, username: String!): Author @auth(role: "manager")

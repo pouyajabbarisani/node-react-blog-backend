@@ -3,7 +3,9 @@ import Joi from '@hapi/joi';
 export const createAuthorValidator = Joi.object({
    fullName: Joi.string().required().label('Name and Family'),
    email: Joi.string().email().required().label('Email'),
-   password: Joi.string().required().regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,30}$/).label('Password').error(new Error('Enter a password between 6 and 20 characters and it should contains letter and number')),
+   password: Joi.string().required().regex(/^(?=.*[a-z])(?=.*\d).{6,30}$/).label('Password').messages({
+      "string.pattern.base": "Password lengths should between 6 and 30 with letter and number",
+   }),
    username: Joi.string().required().alphanum().label('Username')
 });
 export const loginValidator = Joi.object({

@@ -3,7 +3,7 @@ import { gql } from 'apollo-server-express';
 export default gql`
    extend type Query {
       post(slug: String!): Post
-      posts: [Post]!
+      posts(skip: Int, limit: Int): [Post]!
    }
    extend type Mutation {
       createPost(slug: String!, title: String!, content: String!, featuredImage: String, categories: [String]!): Post @auth(role: "author")
@@ -20,6 +20,7 @@ export default gql`
       categories: [String]!
       categoriesList: [Category]!
       author: Author!
+      created_at: String
    }
    type PostDeleteResult {
       status: Boolean!

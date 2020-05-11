@@ -20,6 +20,9 @@ export default {
                email: 1
             }
          }])
+      },
+      checkAuth: (root, args, context, info) => {
+         return Authors.findOne({ username: context.req.author.toString() });
       }
    },
    Mutation: {
