@@ -12,7 +12,6 @@ const PORT = process.env.PORT || 1111;
 // Connect to DB
 mongoose.connect(process.env.ENV_TYPE && process.env.ENV_TYPE == 'test' ? process.env.mongoURI_TEST : process.env.mongoURI, { useNewUrlParser: true, useFindAndModify: false }).then(() => console.log(`🍃${process.env.ENV_TYPE == 'test' ? 'Test' : ''} Database Successfully connected!`)).catch(err => console.log(err));
 
-
 import typeDefs from './typeDefs'
 import resolvers from './resolvers'
 
@@ -24,5 +23,11 @@ const server = new ApolloServer({
    context: ({ req, res }) => ({ req, res })
 });
 
-server.applyMiddleware({ app });
+server.applyMiddleware({
+   app,
+   cors: {
+      origin: 'http://localhost:3000',
+      credentials: true
+   }
+});
 app.listen({ port: PORT }, () => console.log(`⚙️✅Server is running on http://localhost:${PORT}${server.graphqlPath}`));

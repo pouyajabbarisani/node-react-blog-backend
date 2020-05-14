@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const CategoriesSchema = mongoose.Schema({
    title: { type: String, require: true },
-   slug: { type: String, require: true },
+   slug: { type: String, require: true, unique: true },
    updated_at: Date,
    created_at: Date
 });
