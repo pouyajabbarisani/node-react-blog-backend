@@ -1,7 +1,8 @@
-import Authors from '../model/Authors';
-import Posts from '../model/Posts';
-import Joi from '@hapi/joi';
-import { createPostValidator, editPostValidator, deletePostValidator } from '../validation/post';
+import Authors from '../model/Authors'
+import Posts from '../model/Posts'
+import path from 'path'
+import { createPostValidator, editPostValidator, deletePostValidator } from '../validation/post'
+import { createWriteStream } from 'fs'
 
 export default {
    Query: {
@@ -60,6 +61,27 @@ export default {
             throw new Error('Entered post not found!')
          }
       },
+      uploadPhoto: async (root, { photo }, context, info) => {
+         const { filename, createReadStream } = await photo;
+         const { mimetype, filesize } = await getFileData(photo);
+         if ((mimetype == 'image/jpeg' || mimetype == 'image/png') && filesize <= 2097152) {
+            const now = Date.now();
+            await new Promise(res =>
+               createReadStream()
+                  .pipe(createWriteStream(path.join(__dirname, "../uploads/posts/", now + filename)))
+                  .on("close", res)
+            );
+            return {
+               status: true,
+               url: ('/uploads/posts/' + now + filename).toString()
+            }
+         }
+         else {
+            return {
+               status: false
+            }
+         }
+      },
       deletePost: async (root, args, context, info) => {
          // validate input fields using joi
          const { error, validationResult: value } = await deletePostValidator.validate(args, { abortEarly: false });
@@ -102,3 +124,22 @@ export default {
       }
    }
 }
+
+
+const getFileData = file => new Promise(async (resolves, rejects) => {
+   const { filename, mimetype, createReadStream } = await file;
+   let filesize = 0;
+   let stream = createReadStream();
+   stream.on("data", chunk => {
+      filesize += chunk.length;
+   });
+   stream.once("end", () =>
+      resolves({
+         filename,
+         mimetype,
+         filesize
+      })
+   );
+   stream.on("error", rejects);
+});
+

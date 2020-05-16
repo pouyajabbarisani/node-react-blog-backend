@@ -1,9 +1,12 @@
 import express from 'express';
+import path from 'path';
 const app = express();
 
 import cookieParser from 'cookie-parser';
 require('dotenv').config({ path: __dirname + '/.env' });
 app.use(cookieParser(process.env.COOKIE_SIGN));
+app.use("/uploads", express.static(path.join(__dirname, "/uploads")))
+
 import { ApolloServer } from 'apollo-server-express';
 import mongoose from 'mongoose';
 import schemaDirectives from './directives';
