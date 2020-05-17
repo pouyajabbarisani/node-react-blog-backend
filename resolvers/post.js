@@ -1,5 +1,6 @@
 import Authors from '../model/Authors'
 import Posts from '../model/Posts'
+import Categories from '../model/Categories'
 import path from 'path'
 import { createPostValidator, editPostValidator, deletePostValidator } from '../validation/post'
 import { createWriteStream } from 'fs'
@@ -9,8 +10,31 @@ export default {
       post: async (root, args, context, info) => {
          return Posts.findOne({ slug: args.slug.toString() }).exec();
       },
-      posts: (root, args, context, info) => {
-         return Posts.find().exec();
+      posts: async (root, args, context, info) => {
+         const resultPerPage = 10;
+         const resultToSkip = args.page ? (args.page - 1) * resultPerPage : 0;
+         return Posts.aggregate([
+            {
+               $facet: {
+                  list: [
+                     { $skip: resultToSkip },
+                     { $limit: resultPerPage },
+                  ],
+                  pageInfo: [
+                     { $group: { _id: null, count: { $sum: 1 } } },
+                  ],
+               },
+            },
+         ]).then(result => {
+            return {
+               status: true,
+               list: result[0].list,
+               total: result[0].pageInfo[0].count,
+               page: args.page || 1
+            }
+         }).catch(err => {
+            return { status: false }
+         })
       }
    },
    Mutation: {

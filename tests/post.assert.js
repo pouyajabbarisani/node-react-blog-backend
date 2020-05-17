@@ -79,11 +79,16 @@ describe("Post tests", () => {
 
    test("Should get posts list as normal user", (done) => {
       request(url).post('/graphql').set('Content-Type', 'application/json').set('Accept', 'application/json')
-         .send({ query: '{posts{ title }}' })
+         .send({ query: '{posts{ status list {title} total page }}' })
          .then(res => {
             expect(res.body).toHaveProperty('data');
             expect(res.body.data).toHaveProperty('posts');
-            expect(res.body.data.posts[0]).toHaveProperty('title');
+            expect(res.body.data.posts).toHaveProperty('list');
+            expect(res.body.data.posts.list[0]).toHaveProperty('title');
+            expect(res.body.data.posts).toHaveProperty('total');
+            expect(res.body.data.posts.total).toEqual(1);
+            expect(res.body.data.posts).toHaveProperty('page');
+            expect(res.body.data.posts.page).toEqual(1);
             done();
          });
    });
