@@ -11,8 +11,8 @@ export default {
          return Posts.findOne({ slug: args.slug.toString() }).exec();
       },
       posts: async (root, args, context, info) => {
-         const resultPerPage = 10;
-         const resultToSkip = args.page ? (args.page - 1) * resultPerPage : 0;
+         const resultPerPage = args.limit || 10;
+         const resultToSkip = args.page ? (resultPerPage * (args.page - 1)) : 0;
          return Posts.aggregate([
             {
                $facet: {
@@ -74,7 +74,12 @@ export default {
             args.updatedTitle && (updatedPost.title = args.updatedTitle);
             args.updatedContent && (updatedPost.content = args.updatedContent);
             args.updatedCategories && (updatedPost.categories = args.updatedCategories);
-            args.updatedFeaturedImage && (updatedPost.featuredImage = args.updatedFeaturedImage);
+
+            if (args.updatedFeaturedImage == null || typeof args.updatedFeaturedImage == 'string') {
+               typeof args.updatedFeaturedImage == 'string' && (updatedPost.featuredImage = args.updatedFeaturedImage);
+               args.updatedFeaturedImage == null && (updatedPost.featuredImage = '');
+            }
+
             // update edited fields of the post in database
             return Posts.findOneAndUpdate(
                { slug: args.slug.toString() },

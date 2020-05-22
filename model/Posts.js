@@ -7,7 +7,7 @@ autoIncrement.initialize(connection);
 
 const PostsSchema = mongoose.Schema({
    author: { type: String, require: true },
-   slug: { type: String, require: true },
+   slug: { type: String, require: true, unique: true },
    title: { type: String, require: true },
    content: { type: String, require: false },
    categories: { type: Array, require: false },
@@ -33,5 +33,7 @@ PostsSchema.plugin(autoIncrement.plugin, {
 });
 
 var Posts = mongoose.model('Posts', PostsSchema);
+
+
 
 module.exports = Posts;
