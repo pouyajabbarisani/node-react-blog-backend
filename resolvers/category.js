@@ -77,7 +77,38 @@ export default {
    },
    Category: {
       posts: (category, args, context, info) => {
-         return Posts.find({ category: category.slug });
+         return Posts.find({ categories: { $in: [category.slug] } });
+      },
+      pagedPosts: (category, args, content, info) => {
+         const resultPerPage = args.limit || 10;
+         const resultToSkip = args.page ? (resultPerPage * (args.page - 1)) : 0;
+         return Posts.aggregate([
+            {
+               $match: {
+                  categories: { $in: [category.slug] }
+               }
+            },
+            {
+               $facet: {
+                  list: [
+                     { $skip: resultToSkip },
+                     { $limit: resultPerPage },
+                  ],
+                  pageInfo: [
+                     { $group: { _id: null, count: { $sum: 1 } } },
+                  ],
+               },
+            },
+         ]).then(result => {
+            return {
+               status: true,
+               list: result[0].list,
+               total: result[0].pageInfo[0].count,
+               page: args.page || 1
+            }
+         }).catch(err => {
+            return { status: false }
+         })
       }
    }
 }

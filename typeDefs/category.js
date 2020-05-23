@@ -15,9 +15,16 @@ export default gql`
       slug: String!
       title: String!
       posts: [Post]!
+      pagedPosts(page: Int, limit: Int): PagedPosts!
    }
    type CategoryDeleteResult {
       status: Boolean!
       error: String
+   }
+   type PagedPosts {
+      status: Boolean
+      list: [Post]
+      total: Int
+      page: Int
    }
 `
