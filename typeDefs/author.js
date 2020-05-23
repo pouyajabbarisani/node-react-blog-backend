@@ -10,7 +10,7 @@ export default gql`
       createAuthor(fullName: String!, email: String!, password: String!, username: String!): Author @auth(role: "manager")
       initialManager(fullName: String!, email: String!, password: String!, username: String!): Author
       login(email: String!, password: String!): Author
-      logout: Author
+      logout: LogoutResponse
    }
    type Author {
       fullName: String!
@@ -18,5 +18,9 @@ export default gql`
       username: String!
       isManager: Boolean!
       posts: [Post]!
+   }
+   type LogoutResponse {
+      status: Boolean
+      message: String
    }
 `

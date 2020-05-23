@@ -101,7 +101,7 @@ export default {
       },
       logout(parent, args, context, info) {
          context.res.clearCookie('token');
-         return { message: "logged out successfully!" }
+         return { status: true, message: "logged out successfully!" }
       }
    },
    Author: {
