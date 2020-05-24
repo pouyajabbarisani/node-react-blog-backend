@@ -12,3 +12,6 @@ export const loginValidator = Joi.object({
    email: Joi.string().email().required().label('Email'),
    password: Joi.string().required().min(6).max(30).label('Password')
 });
+export const deleteAuthorValidator = Joi.object({
+   username: Joi.string().required().label('Username')
+})

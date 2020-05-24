@@ -4,12 +4,15 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import passwordHasher from '../scripts/password-hasher';
 import Joi from '@hapi/joi';
-import { createAuthorValidator, loginValidator } from '../validation/author';
+import { createAuthorValidator, loginValidator, deleteAuthorValidator } from '../validation/author';
 
 export default {
    Query: {
       author: (root, args, context, info) => {
          return Authors.findOne({ username: args.username.toString() });
+      },
+      checkEmailExistance: (root, args, context, info) => {
+         return Authors.findOne({ email: args.email.toString() });
       },
       authors: (root, args, context, info) => {
          return Authors.aggregate([{
@@ -66,6 +69,32 @@ export default {
             isManager: true
          });
          return manager.save();
+      },
+      deleteAuthor: async (root, args, context, info) => {
+         // validate input fields using joi
+         const { error, validationResult: value } = await deleteAuthorValidator.validate(args, { abortEarly: false });
+         if (error) {
+            throw new Error(error);
+         }
+         // check if post exist in database or not
+         const matchedAuthorArray = await Authors.find({ username: args.username.toString() });
+         if (matchedAuthorArray.length) {
+            const deleteResult = await Authors.remove({ username: args.username.toString() })
+            if (!deleteResult.ok) {
+               return {
+                  status: false
+               }
+            }
+            return {
+               status: true
+            }
+         }
+         else {
+            return {
+               status: false
+               // error: 'Entered author not found!'
+            }
+         }
       },
       login: async (root, args, context, info) => {
          // validating input fields using Joi
