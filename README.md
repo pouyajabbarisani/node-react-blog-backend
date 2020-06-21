@@ -11,7 +11,17 @@ Before running the project, add a **.env** file to the root folder with these va
 
 
 PORT=
+
 PASS_SECRET=
+
 COOKIE_SIGN=
+
 mongoURI=mongodb://user:pass@address:port/db
+
 mongoURI_TEST=mongodb://user:pass@address:port/testdb
+
+
+
+
+And, for running the project run **npm run start-server** command
+
