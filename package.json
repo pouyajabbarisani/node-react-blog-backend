@@ -22,7 +22,7 @@
   "homepage": "https://github.com/pouyajabbarisani/node-react-blog#readme",
   "dependencies": {
     "@hapi/joi": "^17.1.1",
-    "apollo-server-express": "^2.12.0",
+    "apollo-server-express": "^2.14.2",
     "bcrypt": "^4.0.1",
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.5",
