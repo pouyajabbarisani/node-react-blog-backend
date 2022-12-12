@@ -29,7 +29,7 @@
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "esm": "^3.2.25",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "express-validator": "^6.3.0",
     "graphql": "^14.5.8",
     "graphql-tools": "^5.0.0",
